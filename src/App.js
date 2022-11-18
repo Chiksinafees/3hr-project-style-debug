@@ -1,25 +1,25 @@
-import logo from './logo.svg';
+import React,{useState} from 'react';
 import './App.css';
+import InputDetails from './component/Details/InputDetails';
+import PrintDetail from './component/Details/PrintDetail'
 
-function App() {
+const App=()=> {
+
+  const [detail,setDetail]=useState([])
+
+const detailHandler=(obj)=>{
+
+  setDetail((prevData)=>{
+    return [...prevData,obj]
+  })
+}
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <div>
+    <InputDetails ondetail={detailHandler} />
+    {<PrintDetail details={detail}/> }
+     </div>  
+    )
 }
 
 export default App;
