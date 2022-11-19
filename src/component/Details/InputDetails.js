@@ -3,6 +3,7 @@ import classes from "./InputDetails.module.css";
 import Card from "../UI/Card";
 import Button from "../UI/Button";
 import ErrorModal from "../UI/ErrorModal";
+import Wrapper from "../Helpers/Wrapper";
 
 const InputDetails = (props) => {
   const [name, setName] = useState("");
@@ -20,7 +21,7 @@ const InputDetails = (props) => {
     e.preventDefault();
     if (name.trim().length === 0 || age.trim().length === 0) {
       setError({
-        title: "please fill name and age ",
+        title: "please fill name and age both ",
         msg: "Something went wrong!",
       });
       return;
@@ -39,7 +40,7 @@ const InputDetails = (props) => {
     setError(null);
   };
   return (
-    <div>
+    <Wrapper>
       {error && (
         <ErrorModal
           title={error.title}
@@ -61,7 +62,7 @@ const InputDetails = (props) => {
           <Button type="submit">Add User</Button>
         </form>
       </Card>
-    </div>
+    </Wrapper>
   );
 };
 

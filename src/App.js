@@ -1,25 +1,23 @@
-import React,{useState} from 'react';
-import './App.css';
-import InputDetails from './component/Details/InputDetails';
-import PrintDetail from './component/Details/PrintDetail'
+import React, { Fragment, useState } from "react";
+import "./App.css";
+import InputDetails from "./component/Details/InputDetails";
+import PrintDetail from "./component/Details/PrintDetail";
 
-const App=()=> {
+const App = () => {
+  const [detail, setDetail] = useState([]);
 
-  const [detail,setDetail]=useState([])
-
-const detailHandler=(obj)=>{
-
-  setDetail((prevData)=>{
-    return [...prevData,obj]
-  })
-}
+  const detailHandler = (obj) => {
+    setDetail((prevData) => {
+      return [...prevData, obj];
+    });
+  }; // both same=>   <fragment> </fragment> || <> </>
 
   return (
-    <div>
-    <InputDetails ondetail={detailHandler} />
-    {<PrintDetail details={detail}/> }
-     </div>  
-    )
-}
+    <Fragment>
+      <InputDetails ondetail={detailHandler} />
+      <PrintDetail details={detail} />
+    </Fragment>
+  );
+};
 
 export default App;
