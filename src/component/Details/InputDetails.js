@@ -8,6 +8,7 @@ import Wrapper from "../Helpers/Wrapper";
 const InputDetails = (props) => {
   const nameRef = useRef();
   const ageRef = useRef();
+  const collegeRef = useRef();
 
   const [error, setError] = useState();
 
@@ -15,10 +16,15 @@ const InputDetails = (props) => {
     e.preventDefault();
     const UserName = nameRef.current.value;
     const UserAge = ageRef.current.value;
+    const UserCollegeName = collegeRef.current.value;
 
-    if (UserName.trim().length === 0 || UserAge.trim().length === 0) {
+    if (
+      UserName.trim().length === 0 ||
+      UserAge.trim().length === 0 ||
+      UserCollegeName.trim().length === 0
+    ) {
       setError({
-        title: "please fill name and age both ",
+        title: "please fill ALL details",
         msg: "Something went wrong!",
       });
       return;
@@ -27,10 +33,11 @@ const InputDetails = (props) => {
       setError({ title: "Incorrect age( >0 )", msg: "Something went wrong!" });
       return;
     }
-    const obj = { name: UserName, age: UserAge };
+    const obj = { name: UserName, age: UserAge, college: UserCollegeName };
     props.ondetail(obj);
     nameRef.current.value = "";
     ageRef.current.value = "";
+    collegeRef.current.value = "";
   };
 
   const errorHandler = () => {
@@ -47,6 +54,8 @@ const InputDetails = (props) => {
       )}
       <Card className={classes.input}>
         <form onSubmit={submitHandler}>
+          <label htmlFor="collegeName">College Name</label>
+          <input type="text" id="collegeName" ref={collegeRef} />
           <label htmlFor="username">Username</label>
           <input type="text" id="username" ref={nameRef} />
           <label htmlFor="age">Age(Years)</label>
