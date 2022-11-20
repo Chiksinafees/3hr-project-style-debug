@@ -8,7 +8,8 @@ const PrintDetail = (props) => {
       <ul>
         {props.details.map((detail) => (
           <li key={Math.random().toString()}>
-            {detail.college} {detail.name} ({detail.age} years old)
+            College={detail.college}, Name={detail.name}, age=({detail.age}{" "}
+            years old)
           </li>
         ))}
       </ul>
