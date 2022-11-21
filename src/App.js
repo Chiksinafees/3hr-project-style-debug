@@ -1,23 +1,41 @@
-import React, { Fragment, useState } from "react";
-import "./App.css";
-import InputDetails from "./component/Details/InputDetails";
-import PrintDetail from "./component/Details/PrintDetail";
+import React, { useState, useEffect } from "react";
 
-const App = () => {
-  const [detail, setDetail] = useState([]);
+import Login from "./component2/Login/Login";
+import Home from "./component2/Home/Home";
+import MainHeader from "./component2/MainHeader/MainHeader";
 
-  const detailHandler = (obj) => {
-    setDetail((prevData) => {
-      return [...prevData, obj];
-    });
-  }; // both same=>   <fragment> </fragment> || <> </>
+function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const storedUserLoggedInInformation = localStorage.getItem("isLoggedIn");
+
+    if (storedUserLoggedInInformation === "1") {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  const loginHandler = (email, password) => {
+    // We should of course check email and password
+    // But it's just a dummy/ demo anyways
+    localStorage.setItem("isLoggedIn", "1");
+    setIsLoggedIn(true);
+  };
+
+  const logoutHandler = () => {
+    localStorage.removeItem("isLoggedIn");
+    setIsLoggedIn(false);
+  };
 
   return (
-    <Fragment>
-      <InputDetails ondetail={detailHandler} />
-      <PrintDetail details={detail} />
-    </Fragment>
+    <React.Fragment>
+      <MainHeader isAuthenticated={isLoggedIn} onLogout={logoutHandler} />
+      <main>
+        {!isLoggedIn && <Login onLogin={loginHandler} />}
+        {isLoggedIn && <Home onLogout={logoutHandler} />}
+      </main>
+    </React.Fragment>
   );
-};
+}
 
 export default App;
