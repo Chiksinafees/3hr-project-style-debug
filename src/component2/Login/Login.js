@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect, useReducer, useContext } from "react";
 
 import Card2 from "../UI-2/Card2/Card2";
 import classes from "./Login.module.css";
 import Button2 from "../UI-2/Button2/Button2";
+import AuthContext from "../../store/auth-context";
+import ReusableInput from "../UI-2/ReusableInput";
 
 const emailReducer = (state, action) => {
-
   if (action.type === "USER_INPUT") {
     return { value: action.val, isValid: action.val.includes("@") };
   }
@@ -16,17 +17,14 @@ const emailReducer = (state, action) => {
 };
 
 const passwordReducer = (state, action) => {
-
   if (action.type === "USER_PASSWORD") {
-    return { value: action.val, isValid: action.val.includes("@") };
+    return { value: action.val, isValid: action.val.trim().length > 6 };
   }
   if (action.type === "PASSWORD_BLUR") {
-    return { value: state.value, isValid: state.value.includes("@") };
+    return { value: state.value, isValid: state.value.trim().length > 6 };
   }
   return { value: "", isValid: false };
 };
-
-
 
 const Login = (props) => {
   // const [enteredEmail, setEnteredEmail] = useState("");
@@ -34,8 +32,10 @@ const Login = (props) => {
 
   // const [enteredPassword, setEnteredPassword] = useState("");
   // const [passwordIsValid, setPasswordIsValid] = useState();
-  const [formIsValid, setFormIsValid] = useState(false);
 
+  const authCtx = useContext(AuthContext);
+
+  const [formIsValid, setFormIsValid] = useState(false);
   const [emailState, dispatchEmail] = useReducer(emailReducer, {
     value: "",
     isValid: null,
@@ -46,7 +46,6 @@ const Login = (props) => {
     isValid: null,
   });
 
-  
   useEffect(() => {
     console.log("EFFECT RUNNING");
 
@@ -55,6 +54,8 @@ const Login = (props) => {
     };
   }, []);
 
+  const { isValid: emailIsValid } = emailState;
+  const { isValid: passwordIsValid } = passwordState;
   // useEffect(() => {
   //   const identifier = setTimeout(() => {
   //     console.log('Checking form validity!');
@@ -72,9 +73,7 @@ const Login = (props) => {
   const emailChangeHandler = (event) => {
     dispatchEmail({ type: "USER_INPUT", val: event.target.value });
 
-    setFormIsValid(
-      passwordState.isValid && event.target.value.trim().length > 6
-    );
+    setFormIsValid(passwordState.isValid && event.target.value.include("@"));
   };
 
   const passwordChangeHandler = (event) => {
@@ -93,40 +92,31 @@ const Login = (props) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onLogin(emailState.value, passwordState.value);
+    authCtx.onLogin(emailState.value, passwordState.value);
   };
 
   return (
     <Card2 className={classes.login}>
       <form onSubmit={submitHandler}>
-        <div
-          className={`${classes.control} ${
-            emailState.isValid === false ? classes.invalid : ""
-          }`}
-        >
-          <label htmlFor="email">E-Mail</label>
-          <input
-            type="email"
-            id="email"
-            value={emailState.value}
-            onChange={emailChangeHandler}
-            onBlur={validateEmailHandler}
-          />
-        </div>
-        <div
-          className={`${classes.control} ${
-            passwordState.isValid === false ? classes.invalid : ""
-          }`}
-        >
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            value={passwordState.value}
-            onChange={passwordChangeHandler}
-            onBlur={validatePasswordHandler}
-          />
-        </div>
+        <ReusableInput
+          id="email"
+          label="E-mail"
+          type="email"
+          isValid={emailIsValid}
+          value={emailState.value}
+          onChange={emailChangeHandler}
+          onBlur={validateEmailHandler}
+        />
+        <ReusableInput
+          id="password"
+          label="Password"
+          type="password"
+          isValid={passwordIsValid}
+          value={passwordState.value}
+          onChange={passwordChangeHandler}
+          onBlur={validatePasswordHandler}
+        />
+
         <div className={classes.actions}>
           <Button2
             type="submit"
